@@ -10,6 +10,9 @@ def goto():
      return redirect("http://www.google.com", code=302)
 
 
+@app.route('/<alias>')
+def goto(alias):
+     return redirect("http://www.google.com", code=302)
 
 
 if __name__ == '__main__':
