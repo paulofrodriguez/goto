@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def goto():
+def index():
      return redirect("http://www.google.com", code=302)
 
 
