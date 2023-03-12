@@ -1,33 +1,79 @@
-from flask import Flask,redirect
-from markupsafe import escape
-import os
+#! /usr/bin/python3
+import webbrowser
+import sys
+import settings
 
 
-urls = {
-     "google":"http://www.google.com",
-     "uol": "http://www.uol.com.br",
-     "gmail": "http://gmail.com"
-}
 
-app = Flask(__name__)
-
-
-@app.route('/')
-def index():
-     return redirect("http://www.google.com", code=302)
+# if len(sys.argv)>1:
+#      input_url=sys.argv[1].lower()
+#      if input_url.startswith("http"):
+#           url=input_url
+#      else:
+#           url="http://"+input_url
 
 
-@app.route('/<alias>')
-def goto(alias):
-     print(alias)
-     print(urls[alias])
-     #if (alias=='google'):
-          # return redirect("http://www.google.com", code=302)
-     return redirect(urls[alias], code=302)
-     #elif (alias=='uol'):
-     #     return redirect("http://www.uol.com", code=302)
+#def config():
+ #     webbrowser.open_new_tab(config_file_path)
 
-if __name__ == '__main__':
-    # Bind to PORT if defined, otherwise default to 5000.
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+
+def profile(profile):
+
+
+    if (profile==None):
+        return settings.default_profile
+    else:
+
+      new_profile = profile
+
+      settings.config['SETTINGS']['DEFAULT_PROFILE'] = new_profile
+
+      with open(settings.config_file_path, 'w') as configfile:
+            settings.config.write(configfile)
+      
+      
+      settings.default_profile=settings.config['SETTINGS']['DEFAULT_PROFILE']
+      settings.config.read(settings.config_file_path)
+      settings.url=''
+      settings.url=settings.config[settings.default_profile]
+
+def list():
+    print(settings.urls)
+    r=""
+    for k,v in settings.urls.items():
+        r=r+k + " "+v+"\n"
+    print(r)
+    return r
+        
+
+
+def add(key,url):
+      if (profile==None):
+            settings.config[settings.default_profile][key]=url
+      else:
+            settings.config[profile][key]=url
+
+
+
+
+
+
+
+# if len(sys.argv)>1:
+#       match sys.argv[1]:
+#             case "add":
+#                   print("adding...")
+#             case "config":
+#                   config()
+#             case "profile":
+#                   profile()
+#             case "list":
+#                   list()
+#             case _:
+#                   k=sys.argv[1].lower()
+#                   url=settings.url[k]
+#                   # Open URL in a new tab, if a browser window is already open.
+#                   webbrowser.open_new_tab(url)
+
+
+
